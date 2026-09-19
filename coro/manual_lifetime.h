@@ -20,7 +20,7 @@ public:
 private:
   union {
     T val;
-  }
+  };
 };
 
 template <typename T>
@@ -62,9 +62,9 @@ private:
 
 
 template <>
-manual_lifetime<void> {
+class manual_lifetime<void> {
 public:
   void get() {}
   void construct() {}
   void destruct() {}
-}
+};
