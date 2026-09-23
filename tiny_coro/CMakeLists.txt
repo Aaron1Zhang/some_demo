@@ -10,3 +10,6 @@ target_link_libraries(io_uring_demo PRIVATE uring)
 
 add_executable(file_demo iouring_basic_use.cc)
 target_link_libraries(file_demo PRIVATE uring)
+
+add_executable(eventfd_test iouring_eventfd.cc)
+target_link_libraries(eventfd_test PRIVATE uring)
