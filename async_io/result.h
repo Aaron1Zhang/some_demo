@@ -42,6 +42,7 @@ class Result {
       std::rethrow_exception(*exception);
     }
     if (auto res = std::get_if<T>(&ret_)) {
+      // std::cout << "result &&: " << *res << '\n';
       return std::move(*res);
     }
     throw std::runtime_error("No value");

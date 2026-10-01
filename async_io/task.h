@@ -71,6 +71,7 @@ class Task {
   bool done() { return handle_.done(); }
   decltype(auto) get_result() & { return handle_.promise().result(); }
   decltype(auto) get_result() && {
+    // std::cout << "Task::get_result rvalue\n";
     return std::move(handle_.promise()).result();
   }
 

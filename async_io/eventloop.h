@@ -58,6 +58,7 @@ class EventLoop {
     std::optional<MSDuration> timeout;
 
     if (!ready_tasks_.empty()) {
+      // std::cout << "ready task no empty\n";
       timeout.emplace(0);
     } else if (!schedule_tasks_.empty()) {
       auto&& [when, _] = schedule_tasks_[0];
@@ -86,6 +87,7 @@ class EventLoop {
     for (size_t i = 0; i < ready_tasks_.size(); ++i) {
       auto handle = ready_tasks_.front();
       ready_tasks_.pop();
+      //   std::cout << "ready to resume coro\n";
       handle.resume();
     }
   }

@@ -13,7 +13,7 @@ decltype(auto) run(Fut&& main) {
     std::cout << "main is lvalue\n";
     return t.get_result();
   } else {
-    std::cout << "main is rvalue\n";
+    // std::cout << "main is rvalue\n";
     return std::move(t).get_result();
   }
 }
