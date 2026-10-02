@@ -15,7 +15,7 @@ class Task {
     bool await_ready() noexcept { return false; }
     template <typename Promise>
     auto await_suspend(std::coroutine_handle<Promise> self) noexcept {
-      if (auto cont = self.promise().continuation()) {
+      if (auto cont = self.promise().continuation) {
         return cont;
       } else {
         return std::noop_coroutine();
@@ -28,6 +28,7 @@ class Task {
     auto initial_suspend() { return std::suspend_always{}; }
     auto final_suspend() { return FinalAwaiter{}; }
     Task get_return_object() { return Task{coro_handle::from_promise(*this)}; }
+    std::coroutine_handle<> continuation{nullptr};
   };
 
   explicit Task(coro_handle handle) : handle_{handle} {}
@@ -43,8 +44,8 @@ class Task {
   struct AwaiterBase {
     coro_handle self;
     bool await_ready() noexcept {
-      if (handle_) {
-        return handle_.done();
+      if (self) {
+        return self.done();
       }
       return true;
     }
