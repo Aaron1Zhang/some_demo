@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "sync_wait.h"
 #include "task.h"
 
 int main(int argc, char const *argv[]) {
