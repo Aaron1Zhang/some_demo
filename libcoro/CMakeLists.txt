@@ -5,5 +5,5 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 include_directories(.)
-add_executable(main main.cc)
+add_executable(main main.cc timer_handle.cc io_epoll.cc)
 

@@ -7,6 +7,8 @@
 #include <iostream>
 #include <string>
 
+#include "pipe.h"
+
 enum class poll_op : uint64_t {
   /// Poll for read operations.
   read = EPOLLIN,
@@ -46,7 +48,7 @@ static const std::string poll_op_read{"read"};
 static const std::string poll_op_write{"write"};
 static const std::string poll_op_read_write{"read_write"};
 
-const std::string& to_string(poll_op op) {
+inline const std::string& to_string(poll_op op) {
   switch (op) {
     case poll_op::read:
       return poll_op_read;
@@ -65,7 +67,7 @@ static const std::string poll_status_timeout{"timeout"};
 static const std::string poll_status_error{"error"};
 static const std::string poll_status_closed{"closed"};
 
-const std::string& to_string(poll_status status) {
+inline const std::string& to_string(poll_status status) {
   switch (status) {
     case poll_status::read:
       return poll_status_read;
@@ -81,3 +83,31 @@ const std::string& to_string(poll_status status) {
       return poll_unknown;
   }
 }
+
+class poll_stop_token {
+ public:
+  explicit poll_stop_token(int recv) : receiver_{recv} {}
+  int native_handle() const { return receiver_; }
+
+ private:
+  int receiver_{-1};
+};
+
+class poll_stop_source {
+ public:
+  poll_stop_source() = default;
+  poll_stop_source(const poll_stop_source&) = delete;
+
+  poll_stop_token get_token() { return poll_stop_token{pipe_.read_fd()}; }
+  void signal_stop() {
+    int value{1};
+    ssize_t written = ::write(
+        pipe_.write_fd(), reinterpret_cast<const void*>(&value), sizeof(value));
+    if (written != sizeof(value)) {
+      std::cerr << "poll::signal_stop write failed\n";
+    }
+  }
+
+ private:
+  Pipe pipe_;
+};
